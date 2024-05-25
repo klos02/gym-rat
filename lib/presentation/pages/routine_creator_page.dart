@@ -121,11 +121,11 @@ class _RoutineCreatorPageState extends State<RoutineCreatorPage> {
                         endIndent: 20, // Wcięcie końca przedziałki
                       ),
                       SizedBox(height: 8), // Margines między elementami listy
-                      // Wewnętrzna lista z możliwością dodania kolejnych ćwiczeń
+                      
                       ListView.builder(
                         shrinkWrap:
-                            true, // Opcja, która pozwala wewnętrznej liście na dopasowanie się do zawartości
-                        itemCount: 1, // Domyślnie wyświetl jeden wiersz
+                            true, 
+                        itemCount: 1, 
                         itemBuilder: (context, innerIndex) {
                           return Row(
                             children: [
