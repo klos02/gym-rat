@@ -5,6 +5,7 @@ import 'package:gym_rat/presentation/pages/add_exercise_muscle_select_page.dart'
 import 'package:gym_rat/presentation/pages/selected_exercise_page.dart';
 
 List<ExerciseData> exercises = [];
+List<int> setsList = List.filled(20, 0);
 
 Future<void> addExerciseToList(ExerciseData exercise) {
   exercises.add(exercise);
@@ -23,7 +24,8 @@ class RoutineCreatorPage extends StatefulWidget {
 
 class _RoutineCreatorPageState extends State<RoutineCreatorPage> {
   final TextEditingController _nameController = TextEditingController();
-  late List<ExerciseData> _exercises = []; // Przechowuje wszystkie ćwiczenia
+  late List<ExerciseData> _exercises = [];
+  int _setsCount = 1;
 
   @override
   void initState() {
@@ -66,109 +68,117 @@ class _RoutineCreatorPageState extends State<RoutineCreatorPage> {
                 TextField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.routineName),
+                    labelText: AppLocalizations.of(context)!.routineName,
+                  ),
                 ),
                 SizedBox(height: 16.0),
-                // ElevatedButton(
-                //   onPressed: (){},
-                //   child: Text('Save'),
-                // ),
               ],
             ),
             Expanded(
               child: ListView.builder(
-                
+                physics: AlwaysScrollableScrollPhysics(),
                 itemCount: _exercises.length,
                 itemBuilder: (context, index) {
                   final exercise = _exercises[index];
                   final String imgPath =
                       'assets/images/exercises/' + exercise.images[0];
 
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: Container(
-                          width: 50,
-                          height: 50,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(25),
-                            child: Image.asset(
-                              imgPath,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          exercise.name,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SelectedExercisePage(
-                                exercise: exercise,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      Divider(
-                        // Dodanie przedziałki
-                        color: Colors.grey, // Kolor przedziałki
-                        thickness: 1, // Grubość przedziałki
-                        indent: 20, // Wcięcie początku przedziałki
-                        endIndent: 20, // Wcięcie końca przedziałki
-                      ),
-                      SizedBox(height: 8), // Margines między elementami listy
-                      
-                      ListView.builder(
-                        shrinkWrap:
-                            true, 
-                        itemCount: 1, 
-                        itemBuilder: (context, innerIndex) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Ilość powtórzeń',
-                                  ),
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Container(
+                              width: 50,
+                              height: 50,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(25),
+                                child: Image.asset(
+                                  imgPath,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  // Obsługa dodawania nowego ćwiczenia
-                                },
-                              ),
-                            ],
-                          );
-                        },
+                            ),
+                            title: Text(
+                              exercise.name,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                setState(() {
+                                  setsList[index]++;
+                                });
+                              },
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SelectedExercisePage(
+                                    exercise: exercise,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                            indent: 20,
+                            endIndent: 20,
+                          ),
+                          SizedBox(height: 8),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: setsList[index],
+                            itemBuilder: (context, innerIndex) {
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Ilość powtórzeń',
+                                      ),
+                                    ),
+                                  ),
+                                  innerIndex == setsList[index] - 1
+                                      ? IconButton(
+                                          icon: Icon(Icons.remove),
+                                          onPressed: () {
+                                            setState(() {
+                                              setsList[index]--;
+                                            });
+                                          },
+                                        )
+                                      : Container()
+                                ],
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   );
                 },
               ),
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                AddExerciseMuscleSelectPage()),
-                      );
-                    },
-                    child: Text(AppLocalizations.of(context)!.addExercise),
-                  ),
-                ],
-              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddExerciseMuscleSelectPage()),
+                );
+              },
+              child: Text(AppLocalizations.of(context)!.addExercise),
             ),
           ],
         ),
