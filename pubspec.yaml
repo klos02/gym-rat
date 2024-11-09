@@ -83,7 +83,7 @@ flutter:
     - assets/images/
     - assets/exercises.json
     - assets/images/exercises/
-    - assets/icons/
+    #- assets/icons/
     - assets/images/
     - assets/images/exercises/
     - assets/images/exercises/3_4_Sit-Up/

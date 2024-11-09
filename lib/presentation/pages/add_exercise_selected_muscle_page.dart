@@ -51,10 +51,10 @@ class _AddExerciseSelectedMuscleGroupPageState
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        //leading: IconButton(
+        //icon: Icon(Icons.arrow_back, color: Colors.white),
+        //onPressed: () => Navigator.of(context).pop(),
+        //),
         title: Text(
           widget.muscleGroup,
           style: TextStyle(
@@ -63,6 +63,21 @@ class _AddExerciseSelectedMuscleGroupPageState
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RoutineCreatorPage()),
+                );
+            },
+            icon: Icon(Icons.check_circle),
+          ),
+        ],
       ),
       body: Column(
         children: [
